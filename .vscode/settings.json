@@ -1,0 +1,7 @@
+{
+	"deno.enable": false,
+	"deno.import_map": "jspm.importmap",
+	"deno.lint": true,
+	"deno.unstable": true,
+	"typescript.tsdk": "node_modules/typescript/lib"
+}

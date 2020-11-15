@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  fusionstrings-nginx:
+    image: nginx:1.19.4-alpine
+    restart: unless-stopped
+    # depends_on: 
+    #   - fusionstrings-app
+    volumes:
+      - ../.nginx/http.js:/etc/nginx/http.js:ro
+      - ../.nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ../.nginx/ssl/:/etc/ssl/:ro
+      - ../public/:/var/www/public/:ro
+      - ../workers/:/var/www/workers/:ro
+      - ../www/:/var/www/html/:ro
+      # - ..:/workspace:cached
+    ports:
+      - 80:80
+      - 443:443
+
+  fusionstrings-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+      # args:
+      #   # On Linux, you may need to update USER_UID and USER_GID below if not your local UID is not 1000.
+      #   USER_UID: 1000
+      #   USER_GID: 1000
+
+    init: true
+    volumes:
+      # Forwards the local Docker socket to the container.
+      - /var/run/docker.sock:/var/run/docker-host.sock 
+      # Update this to wherever you want VS Code to mount the folder of your project
+      - ..:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    entrypoint: /usr/local/share/docker-init.sh
+    command: sleep infinity
+    network_mode: service:fusionstrings-nginx
+    secrets:
+      - api_key_file
+      - api_key_external
+    environment:
+      - API_KEY=/run/secrets/api_key_file
+    env_file: ../.env
+secrets:
+  api_key_file:
+    file: ../.secrets/api.txt
+  api_key_external:
+    external: true
+
+    # Uncomment the next four lines if you will use a ptrace-based debuggers like C++, Go, and Rust.
+    # cap_add:
+    #  - SYS_PTRACE
+    # security_opt:
+    #   - seccomp:unconfined
+
+    # Uncomment the next line to use a non-root user for all processes.
+    # user: vscode
+
+    # Use "forwardPorts" in **devcontainer.json** to forward an app port locally. 
+    # (Adding the "ports" property to this file will not forward from a Codespace.)
