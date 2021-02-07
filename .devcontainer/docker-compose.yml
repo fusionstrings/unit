@@ -2,16 +2,9 @@ services:
   fusionstrings-unit:
     image: nginx/unit:1.22.0-minimal
     restart: unless-stopped
-    # depends_on: 
-    #   - fusionstrings-app
     volumes:
       - ../.unit/config.json:/docker-entrypoint.d/config.json:ro
-      # - ../.unit/ssl/:/etc/ssl/:ro
       - ../public/:/var/www/public/:ro
-      # - ../workers/:/var/www/workers/:ro
-      # - ../www/:/var/www/html/:ro
-      # - ../app/server.js:/var/app/server.js:ro
-      # - ..:/workspace:cached
     ports:
       - 80:80
       - 443:443
