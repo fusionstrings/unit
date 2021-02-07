@@ -1,0 +1,10 @@
+{
+  "name": "@fusionstrings/unit",
+  "version": "1.0.0",
+  "repository": "git@github.com:fusionstrings/unit.git",
+  "author": "Dilip Kr. Shukla <fusionstrings@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "unit-http": "^1.22.0"
+  }
+}

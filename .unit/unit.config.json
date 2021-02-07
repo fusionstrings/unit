@@ -1,0 +1,14 @@
+{
+    "listeners": {
+        "*:8080": {
+            "pass": "applications/node_app"
+        }
+    },
+    "applications": {
+        "node_app": {
+            "type": "external",
+            "working_directory": "/www/",
+            "executable": "app1.js"
+        }
+    }
+}

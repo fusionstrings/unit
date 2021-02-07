@@ -1,22 +1,25 @@
-version: '3.8'
-
 services:
-  fusionstrings-nginx:
-    image: nginx:1.19.4-alpine
+  fusionstrings-unit:
+    image: nginx/unit:1.22.0-minimal
     restart: unless-stopped
     # depends_on: 
     #   - fusionstrings-app
     volumes:
-      - ../.nginx/http.js:/etc/nginx/http.js:ro
-      - ../.nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ../.nginx/ssl/:/etc/ssl/:ro
+      - ../.unit/config.json:/docker-entrypoint.d/config.json:ro
+      # - ../.unit/ssl/:/etc/ssl/:ro
       - ../public/:/var/www/public/:ro
-      - ../workers/:/var/www/workers/:ro
-      - ../www/:/var/www/html/:ro
+      # - ../workers/:/var/www/workers/:ro
+      # - ../www/:/var/www/html/:ro
+      # - ../app/server.js:/var/app/server.js:ro
       # - ..:/workspace:cached
     ports:
       - 80:80
       - 443:443
+      - 8080:8080
+    expose:
+      - "80"
+      - "443"
+      - "8080"
 
   fusionstrings-app:
     build: 
@@ -37,7 +40,7 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     entrypoint: /usr/local/share/docker-init.sh
     command: sleep infinity
-    network_mode: service:fusionstrings-nginx
+    network_mode: service:fusionstrings-unit
     secrets:
       - api_key_file
       - api_key_external
