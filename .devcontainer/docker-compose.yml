@@ -3,8 +3,10 @@ services:
     image: nginx/unit:1.22.0-minimal
     restart: unless-stopped
     volumes:
-      - ../.unit/config.json:/docker-entrypoint.d/config.json:ro
+      - ../.unit/config-app.json:/docker-entrypoint.d/config.json:ro
       - ../public/:/var/www/public/:ro
+      - ../src/app.js:/var/www/app.js
+    #command: ["chmod", "+x", "/var/www/app.js"]
     ports:
       - 80:80
       - 443:443
